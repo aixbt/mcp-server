@@ -1,0 +1,29 @@
+{
+  "name": "@aixbt/mcp-server",
+  "version": "0.0.1",
+  "description": "MCP server for AIXBT API",
+  "type": "module",
+  "bin": {
+    "mcp-aixbt-server": "dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "start": "node dist/index.js",
+    "build": "tsc && shx chmod +x dist/*.js",
+    "prepare": "npm run build",
+    "inspect": "npx @modelcontextprotocol/inspector dist/index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.10.2",
+    "axios": "^1.6.7",
+    "dotenv": "^16.4.1",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.16",
+    "typescript": "^5.3.3",
+    "shx": "^0.3.4"
+  }
+}
