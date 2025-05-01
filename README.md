@@ -1,6 +1,6 @@
 # AIXBT MCP Server
 
-A Model Context Protocol (MCP) server for AIXBT cryptocurrency data API.
+A Model Context Protocol (MCP) server for AIXBT data API.
 
 ## Tools
 
@@ -51,11 +51,11 @@ Add to your Claude Desktop config using the included `claude-desktop-config.json
     "aixbt_mcp": {
       "command": "npx",
       "args": [
-        "<path-to-this-project>"
+        "@aixbt/mcp-server"
       ],
       "env": {
         "API_KEY": "<api-key>"
       }
     }
-  },
+  }
 ```
