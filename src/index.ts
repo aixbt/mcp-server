@@ -9,7 +9,7 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 // Staging
-const API_URL = 'https://core-api.aixbt.tech'
+const API_URL = 'https://api.aixbt.tech'
 
 // Configure logging
 const log = {
@@ -60,97 +60,10 @@ const aixbtApi = axios.create({
 })
 log.info('Axios client configured with API key')
 
-// Tool: list-project-latest-summaries
-server.tool(
-  'list-project-latest-summaries',
-  {
-    name: z
-      .string()
-      .min(2)
-      .max(50)
-      .describe('Project or token name (i.e. ETH)'),
-    limit: z.number().min(1).max(50).describe('Maximum number of summaries'),
-  },
-  async ({ name, limit }) => {
-    log.info(
-      `Executing tool: list-project-latest-summaries with name=${name}, limit=${limit}`,
-    )
-    try {
-      const url = `${API_URL}/v1/projects`
-      const params = {
-        limit: 1,
-        ticker: name.toLowerCase(),
-      }
-      log.request('GET', url, params)
-
-      const response = await aixbtApi.get(url, { params })
-      log.response(response.status, url, response.data)
-
-      if (
-        response.data.status !== 200 ||
-        !response.data.data ||
-        response.data.data.length === 0
-      ) {
-        log.error(`Project not found: ${name}`)
-        return {
-          content: [
-            {
-              type: 'text',
-              text: JSON.stringify({ error: 'Project not found' }),
-            },
-          ],
-          isError: true,
-        }
-      }
-
-      const project = response.data.data[0]
-      log.debug(
-        `Found project: ${project.name}, summaries count: ${project.summaries?.length || 0}`,
-      )
-
-      const summaries = project.summaries || []
-      const limitedSummaries = summaries.slice(0, limit)
-      log.debug(
-        `Returning ${limitedSummaries.length} summaries for ${project.name}`,
-      )
-
-      const result = {
-        projectName: project.name,
-        summaries: limitedSummaries.map((summary: any) => ({
-          description: summary.description,
-        })),
-      }
-
-      return {
-        content: [
-          {
-            type: 'text',
-            text: JSON.stringify(result, null, 2),
-          },
-        ],
-      }
-    } catch (error) {
-      log.error('Error fetching project summaries:', error)
-      return {
-        content: [
-          {
-            type: 'text',
-            text: JSON.stringify({
-              error: 'Failed to fetch project summaries',
-              details: error instanceof Error ? error.message : String(error),
-            }),
-          },
-        ],
-        isError: true,
-      }
-    }
-  },
-)
-log.info('Registered tool: list-project-latest-summaries')
-
 // Tool: list-top-projects
 server.tool(
   'list-top-projects',
+  'Lists top crypto projects according to AIXBT',
   {
     limit: z.number().min(1).max(50).describe('Maximum number of projects'),
   },
@@ -182,7 +95,6 @@ server.tool(
 
       const formattedProjects = projects.map((project: any) => ({
         name: project.name,
-        score: project.score,
         rationale: project.rationale,
       }))
 

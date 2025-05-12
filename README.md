@@ -2,17 +2,27 @@
 
 A Model Context Protocol (MCP) server for AIXBT data API.
 
+## Claude Desktop Integration
+
+Add to your Claude Desktop config using the included `claude-desktop-config.json` file.
+```
+{
+  "mcpServers": {
+    "aixbt_mcp": {
+      "command": "npx",
+      "args": ["@aixbt/mcp-server"],
+      "env": {
+        "API_KEY": "<api-key>"
+      }
+    }
+  }
+}
+
+```
+
 ## Tools
 
 This server provides two tools:
-
-### list-project-latest-summaries
-
-Lists the latest summaries for a given project.
-
-Parameters:
-- `name`: Project or token name (i.e. ETH)
-- `limit`: Maximum number of summaries
 
 ### list-top-projects
 
@@ -42,20 +52,3 @@ Parameters:
    ```
    npm run inspect
    ```
-
-## Claude Desktop Integration
-
-Add to your Claude Desktop config using the included `claude-desktop-config.json` file.
-```
- "mcpServers": {
-    "aixbt_mcp": {
-      "command": "npx",
-      "args": [
-        "@aixbt/mcp-server"
-      ],
-      "env": {
-        "API_KEY": "<api-key>"
-      }
-    }
-  }
-```
